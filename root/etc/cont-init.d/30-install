@@ -1,0 +1,16 @@
+#!/usr/bin/with-contenv bash
+
+[[ ! -d /config/organizr/.git ]] && (git clone https://github.com/causefx/Organizr /config/organizr/)
+
+# opt out for autoupdates
+[ "$NO_UPDATES" ] && exit 0
+
+cd /config/organizr/
+git fetch --all
+git reset --hard origin/master
+git pull origin master
+chown -R abc:abc /config/organizr/
+
+if [ ! -e "/config/organizr/loginLog.json" ] ; then
+    touch "/config/organizr/loginLog.json"
+fi
