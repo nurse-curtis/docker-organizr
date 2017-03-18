@@ -47,6 +47,7 @@ RUN apk \
         --with-http_auth_request_module \ 
         --with-mail \ 
         --with-mail_ssl_module \ 
+	--with-http_realip_module \ 
         --with-http_sub_module && \
     make && \
     make install && \
