@@ -5,14 +5,14 @@ MAINTAINER rix1337
 ENV NGINX_VERSION nginx-1.10.3
 ENV HEADERS_MORE_VERSION 0.32
 
-# Install sendmail alternative & PHP7 Sqlite Packages for Organizr
+# Install PHP7 Sqlite Packages for Organizr
 RUN \
  apk add --no-cache \
 	php7-pdo_sqlite \
 	php7-sqlite3 \
 	php7-zip
         
-# Build nginx with http_sub module
+# Build nginx with custom modules (realip/http_sub/headers_more)
 RUN apk \ 
         --update add openssl-dev pcre-dev zlib-dev wget build-base && \
     mkdir -p /tmp/src && \
