@@ -11,6 +11,13 @@ git reset --hard origin/master
 git pull origin master
 chown -R abc:abc /config/organizr/
 
+# Create Config file (else fail2ban will not launch)
 if [ ! -e "/config/organizr/loginLog.json" ] ; then
     touch "/config/organizr/loginLog.json"
 fi
+
+# Update GeoIP
+mkdir -p /usr/share/geoip
+cd /usr/share/geoip
+wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz || { echo 'Could not download GeoLiteCountry, exiting.' ; exit 1; }
+gunzip -f GeoIP.dat.gz
