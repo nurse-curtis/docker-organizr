@@ -12,7 +12,7 @@ RUN \
 	php7-sqlite3 \
 	php7-zip
         
-# Build nginx with custom modules (realip/http_sub/headers_more)
+# Build nginx with custom modules (geoip/realip/http_sub/headers_more)
 RUN apk \ 
         --update add openssl-dev pcre-dev zlib-dev wget build-base && \
     mkdir -p /tmp/src && \
@@ -47,6 +47,7 @@ RUN apk \
         --with-http_auth_request_module \ 
         --with-mail \ 
         --with-mail_ssl_module \ 
+	--with-http_geoip_module \ 
 	--with-http_realip_module \ 
         --with-http_sub_module && \
     make && \
