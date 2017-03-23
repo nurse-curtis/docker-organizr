@@ -5,12 +5,13 @@ MAINTAINER rix1337
 ENV NGINX_VERSION nginx-1.10.3
 ENV HEADERS_MORE_VERSION 0.32
 
-# Install PHP7 Sqlite Packages for Organizr
+# Install PHP7 and GeoIP Packages for Organizr
 RUN \
  apk add --no-cache \
 	php7-pdo_sqlite \
 	php7-sqlite3 \
-	php7-zip
+	php7-zip \
+	geoip
         
 # Build nginx with custom modules (geoip/realip/http_sub/headers_more)
 RUN apk \ 
