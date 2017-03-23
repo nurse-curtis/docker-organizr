@@ -11,15 +11,11 @@ RUN \
 	php7-pdo_sqlite \
 	php7-sqlite3 \
 	php7-zip \
-	geoip
+	geoip-dev
         
 # Build nginx with custom modules (geoip/realip/http_sub/headers_more)
 RUN apk \ 
         --update add openssl-dev pcre-dev zlib-dev wget build-base && \
-    wget -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCountry/GeoIP.dat.gz && \
-    gunzip GeoIP.dat.gz && \
-    mkdir /usr/local/share/GeoIP/ && \
-    mv GeoIP.dat /usr/local/share/GeoIP/ && \
     mkdir -p /tmp/src && \
     mkdir -p /tmp/modules && \
     cd /tmp/modules && \
