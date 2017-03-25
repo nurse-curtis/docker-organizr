@@ -1,0 +1,146 @@
+# This config needs some further edits - Read the whole file!
+# Secure your webservices with A+ 100/100/100/100 on SSLlabs, http2, fail2ban, Country/IP whitelisting, hidden nginx/PHP headers and more!
+# Replace YOURDOMAIN with your domain!
+# Uncomment lines 21-29 and edit ../nginx.conf to whitelist IPs/Countries and (default whitelist: US + Qualys + Securityheaders)
+# Uncomment lines 73-90 and create 404.html (not found) 40x.html (forbidden) 50x.html (loading issues) to hide nginx info from error pages
+# Uncomment lines 114-118 and create ../../www/logo.png (your logo for Organizr/Plex loading) 
+# Uncomment lines 123-129 after setting up IP/Port for your Plex server and setting up YOURDOMAIN and logo.png (see lines 3 and 6) and replacing YOURDONATEDOMAIN
+# To set up reverse proxies for your services, edit and duplicate lines 132-145 as required (correct IP/Port/HTTPauthHeader)
+# To secure your reverse-proxied services with a cookie password set up Organizr first, then replace ORGANIZRCOOKIEPASSWORD below
+
+server {
+	# Server Config
+	listen       443 ssl http2;
+	server_name  YOURDOMAIN;
+	
+	# Block access without host
+	if ($http_host != "YOURDOMAIN") {
+		return 444;
+	}
+	
+	# Whitelist Allowed Country IPs
+	#if ($allowed_country = yes) {
+	#	set $exclusion 1;
+	#}
+
+	# Check if Whitelisted
+	#if ($exclusion = "0") {
+	#	return 444;
+	#}
+
+	# Letsencrypt Certificates
+	ssl_certificate /config/keys/letsencrypt/fullchain.pem;
+	ssl_certificate_key /config/keys/letsencrypt/privkey.pem;
+	ssl_dhparam /config/nginx/dhparams.pem;
+
+	# Strong HTTPS Settings
+	ssl_session_timeout 10m;
+	ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA;
+	ssl_prefer_server_ciphers on;
+	ssl_protocols TLSv1.2;
+	ssl_stapling on;
+	ssl_stapling_verify on;
+	ssl_ecdh_curve secp384r1;
+
+	# Disable gzip for security
+	gzip off;
+	
+	# Disable Version Info
+	server_tokens off;
+	
+	# Security Headers
+	add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+	
+	# Enter sha256 pins of your certificates - At least one not currently being served!
+	add_header Public-Key-Pins 'pin-sha256="SHA256PIN1"; pin-sha256="SHA256PIN2"; pin-sha256="SHA256PIN3"; max-age=5184000; includeSubdomains';
+	
+	# CSS Protection - Replace YOURDOMAIN
+	add_header X-Frame-Options SAMEORIGIN;
+	add_header Content-Security-Policy "frame-ancestors https://YOURDOMAIN"; 
+	add_header X-Content-Type-Options nosniff;
+	add_header X-XSS-Protection "1; mode=block";	
+	add_header X-Robots-Tag none;
+	
+	# Referrer Policy
+	add_header Referrer-Policy "no-referrer";
+	
+	# Modify nginx server output
+	more_set_headers "Server: Organizr";
+	
+	# Hide PHP server output
+	more_clear_headers 'X-Powered-By';
+	
+	# Custom 404 error page (create your own!)
+	# error_page 404 /404.html;
+	# location = /404.html {
+	#		root /config/www;
+	#		internal;
+	#}
+	# Custom 40x error pages (create your own!)
+	#error_page 400 401 403 /40x.html;
+	#location = /40x.html {
+	#		root /config/www;
+	#		internal;
+	#}
+	# Custom 50x error pages (create your own!)
+	#error_page 500 502 503 504 /50x.html;
+	#location = /50x.html {
+	#		root /config/www;
+	#		internal;
+	#}
+	
+	# Organizr
+	root /config/organizr;
+	index index.html index.htm index.php;
+	
+	# Check (Disable for Security reasons)
+	location / {
+		try_files $uri $uri/ /index.html /index.php?$args =404;
+	}
+	
+	# PHP
+	location ~ \.php$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		fastcgi_pass 127.0.0.1:9000;
+		fastcgi_index index.php;
+		include /etc/nginx/fastcgi_params;
+	}
+	
+	# Block access to check (contains verbose server info)
+	location ^~ /check.php {
+		return 404;
+	}
+
+	# Logo (for Organizr or Plex loading, as seen below)
+	#location /logo.png {
+	#	alias /config/www/logo.png;
+	#	expires 1y;
+	#}
+	
+	# Reverse Proxy without Cookie Password (=Public), eg. Plex
+	location /web {
+		proxy_pass https://10.10.0.1:32400;
+		# sub_filter_types text/css text/javascript;
+		# Replace Plex loading logo with your own (edit YOURDOMAIN!)
+		# sub_filter '.plex-image.logo{width:200px;height:65px;background-image:url' '.plex-image.logo{width:200px;height:100px;background-image:url(https://YOURDOMAIN/logo.png);background-size:200px 100px}/* rix was here';
+		# sub_filter ';background-size:200px 65px}.plex-image.server' ' */.plex-image.server';
+		# Add custom donation link in nav bar (edit YOURDONATEDOMAIN!)
+		# sub_filter '<ul class="nav nav-bar-nav nav-bar-right">' '<ul class="nav nav-bar-nav nav-bar-right"><li><a href="YOURDONATEDOMAIN" target="_blank" title="" data-toggle="tooltip" data-original-title="Bedanken"><span class="badge badge-transparent "></span><i class="glyphicon donate heart"></i></a></li>';
+		# sub_filter_last_modified on;
+	}
+	
+	# Reverse Proxy with Cookie Password (Organizr) and unsecured service
+	location /service/ {
+		if ($cookie_cookiePassword != "ORGANIZRCOOKIEPASSWORD") { return 404; }
+		proxy_pass http://10.10.0.1:8000/service/;
+	}
+	
+	# Reverse Proxy with Cookie Password (Organizr) and httpauth secured service
+	location /secureservice/ {
+		# Replace the Cookie Password with the one set in Organizr
+		if ($cookie_cookiePassword != "ORGANIZRCOOKIEPASSWORD") { return 404; }
+		proxy_pass http://10.10.0.1:8080/secureservice/;
+		# Set Auth Header in base64 format to proxy httpauth secured services
+		proxy_set_header Authorization "Basic BASE64AUTHHEADER";
+		}
+}
