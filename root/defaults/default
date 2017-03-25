@@ -3,7 +3,7 @@
 # Replace YOURDOMAIN with your domain!
 # Uncomment lines 21-29 and edit ../nginx.conf to whitelist IPs/Countries and (default whitelist: US + Qualys + Securityheaders)
 # Uncomment lines 73-90 and create 404.html (not found) 40x.html (forbidden) 50x.html (loading issues) to hide nginx info from error pages
-# Uncomment lines 114-118 and create ../../www/logo.png (your logo for Organizr/Plex loading) 
+# Uncomment lines 114-118 and create ../../www/logo.png (your logo for Organizr/Plex loading) .. with 2/1 AR in this example
 # Uncomment lines 123-129 after setting up IP/Port for your Plex server and setting up YOURDOMAIN and logo.png (see lines 3 and 6) and replacing YOURDONATEDOMAIN
 # To set up reverse proxies for your services, edit and duplicate lines 132-145 as required (correct IP/Port/HTTPauthHeader)
 # To secure your reverse-proxied services with a cookie password set up Organizr first, then replace ORGANIZRCOOKIEPASSWORD below
