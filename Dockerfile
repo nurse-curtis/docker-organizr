@@ -2,7 +2,7 @@ FROM linuxserver/letsencrypt
 MAINTAINER rix1337
 
 # Set latest stable nginx
-ENV NGINX_VERSION nginx-1.10.3
+ENV NGINX_VERSION nginx-1.13.0
 ENV HEADERS_MORE_VERSION 0.32
 
 # Install PHP7 and GeoIP Packages for Organizr
