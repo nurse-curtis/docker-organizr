@@ -76,7 +76,7 @@ RUN apk \
     mkdir -p /tmp/src && \
     mkdir -p /tmp/modules && \
     cd /tmp/modules && \
-    git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git \
+    git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git && \
     wget https://github.com/openresty/headers-more-nginx-module/archive/v$HEADERS_MORE_VERSION.tar.gz -O headers-more-$HEADERS_MORE_VERSION.tar.gz && \
     tar xzf headers-more-$HEADERS_MORE_VERSION.tar.gz && \
     cd /tmp/src && \
