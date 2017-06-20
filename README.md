@@ -1,5 +1,5 @@
 # docker-organizr
-Organizr with letsencrypt, http_sub and fail2ban
+Organizr with letsencrypt, http_sub and fail2ban + ngx_http_substitutions_filter_module
 
 # Credits 
 Author | Projekt
