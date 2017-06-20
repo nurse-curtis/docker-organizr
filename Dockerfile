@@ -2,7 +2,7 @@ FROM linuxserver/letsencrypt
 MAINTAINER rix1337
 
 LABEL org.freenas.interactive="false" 					\
-      org.freenas.version="1" 						\
+      org.freenas.version="2" 						\
       org.freenas.autostart="true" 					\
       org.freenas.privileged="true"					\
       org.freenas.expose-ports-at-host="true" 				\
