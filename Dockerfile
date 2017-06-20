@@ -72,10 +72,11 @@ RUN \
         
 # Build nginx with custom modules (geoip/realip/http_sub/headers_more)
 RUN apk \ 
-        --update add openssl-dev pcre-dev zlib-dev wget build-base && \
+        --update add openssl-dev pcre-dev zlib-dev wget build-base git && \
     mkdir -p /tmp/src && \
     mkdir -p /tmp/modules && \
     cd /tmp/modules && \
+    git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git \
     wget https://github.com/openresty/headers-more-nginx-module/archive/v$HEADERS_MORE_VERSION.tar.gz -O headers-more-$HEADERS_MORE_VERSION.tar.gz && \
     tar xzf headers-more-$HEADERS_MORE_VERSION.tar.gz && \
     cd /tmp/src && \
@@ -102,6 +103,7 @@ RUN apk \
         --with-http_gzip_static_module \ 
         --with-http_v2_module \ 
 	--add-module=/tmp/modules/headers-more-nginx-module-$HEADERS_MORE_VERSION \
+	--add-module=/tmp/modules/ngx_http_substitutions_filter_module \
         --with-http_auth_request_module \ 
         --with-mail \ 
         --with-mail_ssl_module \ 
