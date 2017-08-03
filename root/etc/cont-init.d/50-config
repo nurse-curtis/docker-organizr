@@ -29,6 +29,7 @@ cp /config/fail2ban/jail.local /etc/fail2ban/jail.local
 	cp /defaults/proxy.conf /config/nginx/proxy.conf
 cp -R /config/php7 /etc/ && chown -R root:root /etc/php7
 cp -R /config/logrotate.d /etc/ && chown -R root:root /etc/logrotate.d
+cp -R /config/periodic /etc/ && chown -R root:root /etc/periodic
 
 # import user crontabs
 rm /etc/crontabs/*
