@@ -1,5 +1,7 @@
+## This is a personal-use modifaction that likely won't be useful for others.  Especially since Let'sEncrypt was disabled.
+
 # docker-organizr
-Organizr with letsencrypt, http_sub and fail2ban + ngx_http_substitutions_filter_module
+Organizr with http_sub and fail2ban + ngx_http_substitutions_filter_module - 
 
 # Credits 
 Author | Projekt
